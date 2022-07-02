@@ -1,0 +1,51 @@
+<launch>
+
+    
+    <arg name="map_path" default="$(find rm_cleaner_js)/maps"/>
+    <arg name="map_name" default="map" />
+    <arg name="robot_radius" default="0.9"/>
+    <arg name="tool_radius" default="0.32"/>
+
+
+
+    <node pkg="move_base" type="move_base" name="move_base" output="screen" >
+
+        <param name="base_global_planner" value="full_coverage_path_planner/SpiralSTC"/>
+        
+        <param name="SpiralSTC/robot_radius" value="$(arg robot_radius)"/>
+        <param name="SpiralSTC/tool_radius" value="$(arg tool_radius)"/>
+        <param name="global_costmap/robot_radius" value="$(arg robot_radius)"/>
+
+
+        <rosparam file="$(find rm_cleaner_js)/config/local_planner_params.yaml" command="load" />
+        <rosparam file="$(find rm_cleaner_js)/config/move_base_params.yaml" command="load" />
+
+        <!-- Global costmap -->
+        <rosparam file="$(find rm_cleaner_js)/config/costmap_common_params.yaml" command="load" ns="global_costmap"/>
+        <rosparam file="$(find rm_cleaner_js)/config/costmap_global_params.yaml" command="load" />
+
+        <!-- Local costmap -->
+        <rosparam file="$(find rm_cleaner_js)/config/costmap_common_params.yaml" command="load" ns="local_costmap"/>
+        <rosparam file="$(find rm_cleaner_js)/config/costmap_local_params.yaml" command="load" />
+
+        <param name="global_costmap/track_unknown_space" value="true" />
+        <param name="local_costmap/track_unknown_space" value="true" />
+
+        <remap from="map" to="/map" />
+
+    </node>
+
+
+
+
+    <!--We need a map to fully cover-->
+    <node name="grid_server" pkg="map_server" type="map_server" args="$(arg map_path)/$(arg map_name).yaml">
+        <param name="frame_id" value="map"/>
+    </node>
+
+    <!-- Trigger planner by publishing a move_base goal -->
+    <node name="publish_simple_goal" pkg="rostopic" type="rostopic"  launch-prefix="bash -c 'sleep 1.0; $0 $@' "
+        args="pub --latch /move_base/goal move_base_msgs/MoveBaseActionGoal --file=$(find full_coverage_path_planner)/test/simple_goal.yaml"/>
+
+   
+</launch>
