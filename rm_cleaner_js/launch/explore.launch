@@ -1,6 +1,5 @@
 <launch>
 
-    <arg name="tf_prefix" default="" />
     <arg name="track_unknown_space" default="true"/>
 
     <!-- Move base -->
@@ -26,6 +25,15 @@
         <param name="global_costmap/track_unknown_space" value="$(arg track_unknown_space)" />
         <param name="local_costmap/track_unknown_space" value="$(arg track_unknown_space)" />
 
+    </node>
+
+    <!-- GMapping -->
+    <node pkg="gmapping" type="slam_gmapping" name="gmapping" output="screen">
+        <remap from="scan" to="scan_multi" />
+        <param name="map_frame" value="/map" />
+        <param name="odom_frame" value="/odom" />
+        <param name="base_frame" value="/base_link" />
+        <param name="map_update_interval" value="2.0" />
     </node>
 
     <!-- Explore lite -->
