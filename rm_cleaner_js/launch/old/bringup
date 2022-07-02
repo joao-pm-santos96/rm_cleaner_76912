@@ -1,0 +1,80 @@
+<launch>
+
+    <arg name="gui" default="true" />
+    <arg name="rviz" default="true" />
+    <arg name="map" default="-1" />
+    <arg name="unpause" default="false" />
+
+    <arg name="tf_prefix" default="" />
+    <arg name="local_planner" default="dwb" />
+
+    <!-- Launch base world -->
+    <group if="$(eval arg('map') == 0)">
+        <include file="$(find mir_gazebo)/launch/mir_empty_world.launch">
+            <arg name="gui" value="$(arg gui)" />
+            <arg name="tf_prefix" value="$(arg tf_prefix)" />
+        </include>
+
+        <node name="spawn_rm_simple" pkg="gazebo_ros" type="spawn_model" args="-sdf
+            -file $(find rm_mir_cleaner)/sdf/rm_simple/model.sdf -model walls" output="screen" />
+    </group>
+
+    <!-- Launch complex world -->
+    <group if="$(eval arg('map') == 1)">
+        <include file="$(find mir_gazebo)/launch/mir_maze_world.launch">
+            <arg name="gui" value="$(arg gui)" />
+            <arg name="tf_prefix" value="$(arg tf_prefix)" />
+        </include>
+    </group>
+
+    <!-- Unpause -->
+    <node if="$(arg unpause)" pkg="rosservice" type="rosservice" name="test" args="call --wait /gazebo/unpause_physics"/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Move base -->
+    <include file="$(find rm_cleaner_js)/launch/move_base.launch">
+      <arg name="local_planner" value="$(arg local_planner)"/>
+      <arg name="with_virtual_walls" value="false" />
+      <arg name="prefix" value="$(arg tf_prefix)" />
+      <arg name="track_unknown_space" value="true" />
+    </include>
+
+    <!-- Merge laser scans -->
+    <node pkg="ira_laser_tools" name="laserscan_multi_merger" type="laserscan_multi_merger" output="screen">
+        <param name="destination_frame" value="base_link"/>
+        <!-- <param name="cloud_destination_topic" value="/merged_cloud"/> -->
+        <param name="scan_destination_topic" value="/scan_multi"/>
+        <param name="laserscan_topics" value ="/b_scan_rep117 /f_scan_rep117" /> 
+        <param name="angle_min" value="-3.14"/> -->
+        <param name="angle_max" value="3.14"/>
+        <!-- <param name="angle_increment" value="0.0058"/> -->
+        <!-- <param name="scan_time" value="0.0333333"/> -->
+        <param name="range_min" value="0.10"/>
+        <param name="range_max" value="50.0"/>
+    </node>
+
+    <!-- GMapping -->
+    <node pkg="gmapping" type="slam_gmapping" name="gmapping" output="screen">
+        <remap from="scan" to="scan_multi" />
+        <param name="map_frame" value="/map" />
+        <param name="odom_frame" value="/odom" />
+        <param name="base_frame" value="/base_link" />
+    </node>
+
+    <!-- Visualize -->
+    <group if="$(arg rviz)">
+        <node name="rviz" pkg="rviz" type="rviz" args="--display-config $(find rm_cleaner_js)/config/visualize.rviz" required="false"/>
+    </group>
+
+</launch>

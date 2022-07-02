@@ -1,0 +1,3 @@
+<launch>
+  <node name="map_saver" pkg="map_server" type="map_saver" args="-f $(find rm_cleaner_js)/maps/map" />
+</launch>
