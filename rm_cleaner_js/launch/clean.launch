@@ -6,8 +6,8 @@
 
     <arg name="map_path" default="$(find rm_cleaner_js)/maps"/>
     <arg name="map_name" default="map" />
-    <arg name="robot_radius" default="0.9"/>
-    <arg name="tool_radius" default="0.32"/>
+    <arg name="robot_radius" default="0.45"/>
+    <arg name="tool_radius" default="0.45"/>
 
 
 
@@ -19,9 +19,8 @@
         <param name="SpiralSTC/tool_radius" value="$(arg tool_radius)"/>
         <param name="global_costmap/robot_radius" value="$(arg robot_radius)"/>
 
-
         <rosparam file="$(find rm_cleaner_js)/config/local_planner_params.yaml" command="load" />
-        <rosparam file="$(find rm_cleaner_js)/config/move_base_params.yaml" command="load" />
+        <rosparam file="$(find rm_cleaner_js)/config/move_base_params.yaml" command="load" /> -->
 
         <!-- Global costmap -->
         <rosparam file="$(find rm_cleaner_js)/config/costmap_common_params.yaml" command="load" ns="global_costmap"/>
@@ -30,6 +29,9 @@
         <!-- Local costmap -->
         <rosparam file="$(find rm_cleaner_js)/config/costmap_common_params.yaml" command="load" ns="local_costmap"/>
         <rosparam file="$(find rm_cleaner_js)/config/costmap_local_params.yaml" command="load" />
+
+        <!-- Override -->
+        <param name="DWBLocalPlanner/prune_plan" value="false"/>
 
         <remap from="map" to="/map" />
 

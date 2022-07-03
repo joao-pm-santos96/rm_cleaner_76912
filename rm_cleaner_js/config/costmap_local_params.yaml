@@ -13,8 +13,6 @@ local_costmap:
   origin_x: 0.0
   origin_y: 0.0
 
-  # plugins are loaded via costmap_local_params_plugins_[mapping|planning].yaml
-
   plugins:
       - {name: obstacles,  type: "costmap_2d::VoxelLayer" }
       - {name: inflation,  type: "costmap_2d::InflationLayer" }
