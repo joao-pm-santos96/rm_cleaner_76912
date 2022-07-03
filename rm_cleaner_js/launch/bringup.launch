@@ -37,7 +37,7 @@
     </node>
 
     <!-- Unpause -->
-    <node if="$(arg unpause)" pkg="rosservice" type="rosservice" name="test" args="call --wait /gazebo/unpause_physics"/>
+    <node if="$(arg unpause)" pkg="rosservice" type="rosservice" name="unpause" args="call --wait /gazebo/unpause_physics"/>
 
     <!-- Visualize -->
     <group if="$(arg rviz)">
