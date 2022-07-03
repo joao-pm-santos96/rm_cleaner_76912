@@ -84,7 +84,6 @@
     </node>
 
     <!-- Trigger planner by publishing a move_base goal -->
-    
-
+    <node name="publish_simple_goal" pkg="rostopic" type="rostopic"  launch-prefix="bash -c 'sleep 1.0; $0 $@' " args="pub --latch /move_base/goal move_base_msgs/MoveBaseActionGoal --file=$(find full_coverage_path_planner)/test/simple_goal.yaml"/>
    
 </launch>
