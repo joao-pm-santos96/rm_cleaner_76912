@@ -8,14 +8,15 @@
 
     <node pkg="move_base" type="move_base" name="move_base" output="screen" >
 
-        <param name="base_global_planner" value="full_coverage_path_planner/SpiralSTC"/>
+        <rosparam file="$(find rm_cleaner_js)/config/move_base_params.yaml" command="load" /> 
+        <rosparam file="$(find rm_cleaner_js)/config/global_planner_params.yaml" command="load" />
+        <!-- <rosparam file="$(find rm_cleaner_js)/config/local_planner_params.yaml" command="load" /> -->
+        <!-- <param name="base_local_planner" value="teb_local_planner/TebLocalPlannerROS" /> -->
+        <param name="base_local_planner" value="dwa_local_planner/DWAPlannerROS" />
         
         <param name="SpiralSTC/robot_radius" value="$(arg robot_radius)"/>
         <param name="SpiralSTC/tool_radius" value="$(arg tool_radius)"/>
         <param name="global_costmap/robot_radius" value="$(arg robot_radius)"/>
-
-        <rosparam file="$(find rm_cleaner_js)/config/local_planner_params.yaml" command="load" />
-        <rosparam file="$(find rm_cleaner_js)/config/move_base_params.yaml" command="load" /> -->
 
         <!-- Global costmap -->
         <rosparam file="$(find rm_cleaner_js)/config/costmap_common_params.yaml" command="load" ns="global_costmap"/>
@@ -26,7 +27,8 @@
         <rosparam file="$(find rm_cleaner_js)/config/costmap_local_params.yaml" command="load" />
 
         <!-- Override -->
-        <param name="DWBLocalPlanner/prune_plan" value="false"/>
+        <!-- <param name="DWBLocalPlanner/prune_plan" value="false"/> -->
+        <param name="DWAPlannerROS/prune_plan" value="true"/>
 
         <remap from="map" to="/map" />
 
@@ -35,7 +37,7 @@
 
     <!-- AMCL -->
     <node pkg="amcl" type="amcl" name="amcl" output="screen" >
-      <param name="use_map_topic"             value="true"/>
+      <param name="use_map_topic"             value="false"/>
       <param name="odom_model_type"           value="diff-corrected"/>
       <param name="gui_publish_rate"          value="10.0"/>
       <param name="save_pose_rate"            value="0.5"/>
@@ -84,6 +86,7 @@
     </node>
 
     <!-- Trigger planner by publishing a move_base goal -->
-    <node name="publish_simple_goal" pkg="rostopic" type="rostopic"  launch-prefix="bash -c 'sleep 1.0; $0 $@' " args="pub --latch /move_base/goal move_base_msgs/MoveBaseActionGoal --file=$(find full_coverage_path_planner)/test/simple_goal.yaml"/>
-   
+    <!--
+    <node if="false" name="publish_simple_goal" pkg="rostopic" type="rostopic"  launch-prefix="bash -c 'sleep 1.0; $0 $@' " args="pub --><!--latch /move_base/goal move_base_msgs/MoveBaseActionGoal --><!--file=$(find full_coverage_path_planner)/test/simple_goal.yaml"/>
+   -->
 </launch>

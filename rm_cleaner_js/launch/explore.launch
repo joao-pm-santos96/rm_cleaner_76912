@@ -34,6 +34,7 @@
         <param name="odom_frame" value="/odom" />
         <param name="base_frame" value="/base_link" />
         <param name="map_update_interval" value="2.0" />
+        <param name="linearUpdate" value="0.5" />
     </node>
 
     <!-- Explore lite -->
