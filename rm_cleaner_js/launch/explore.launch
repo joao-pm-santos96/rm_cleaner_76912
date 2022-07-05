@@ -8,7 +8,7 @@
         <param name="SBPLLatticePlanner/primitive_filename" value="$(find mir_navigation)/mprim/unicycle_highcost_5cm.mprim" />
 
         <rosparam file="$(find rm_cleaner_js)/config/move_base_params.yaml" command="load" />
-        <rosparam file="$(find rm_cleaner_js)/config/global_planner_params.yaml" command="load" />
+        <rosparam file="$(find rm_cleaner_js)/config/global_planner_explore_params.yaml" command="load" />
         <rosparam file="$(find rm_cleaner_js)/config/local_planner_params.yaml" command="load" />
 
         <!-- Global costmap -->
@@ -19,7 +19,7 @@
         <rosparam file="$(find rm_cleaner_js)/config/costmap_common_params.yaml" command="load" ns="local_costmap"/>
         <rosparam file="$(find rm_cleaner_js)/config/costmap_local_params.yaml" command="load" />
 
-        <remap from="map" to="/map" />
+        <!-- <remap from="map" to="/map" /> -->
         <!-- <remap from="marker" to="move_base_node/DWBLocalPlanner/markers" /> -->
 
         <param name="global_costmap/track_unknown_space" value="$(arg track_unknown_space)" />

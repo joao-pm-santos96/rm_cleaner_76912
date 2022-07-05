@@ -1,4 +1,4 @@
-base_global_planner: full_coverage_path_planner/SpiralSTC
+base_global_plnner: SBPLLatticePlanner
 SBPLLatticePlanner:
   environment_type: XYThetaLattice
   planner_type: ARAPlanner

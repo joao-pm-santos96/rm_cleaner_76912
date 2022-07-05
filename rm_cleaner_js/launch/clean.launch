@@ -6,10 +6,10 @@
 
 
 
-    <node pkg="move_base" type="move_base" name="move_base" output="screen" >
+    <node pkg="move_base" type="move_base" name="move_base" output="screen">
 
         <rosparam file="$(find rm_cleaner_js)/config/move_base_params.yaml" command="load" /> 
-        <rosparam file="$(find rm_cleaner_js)/config/global_planner_params.yaml" command="load" />
+        <rosparam file="$(find rm_cleaner_js)/config/global_planner_clean_params.yaml" command="load" />
         <!-- <rosparam file="$(find rm_cleaner_js)/config/local_planner_params.yaml" command="load" /> -->
         <!-- <param name="base_local_planner" value="teb_local_planner/TebLocalPlannerROS" /> -->
         <param name="base_local_planner" value="dwa_local_planner/DWAPlannerROS" />
@@ -77,13 +77,15 @@
       <remap from="static_map"                to="/static_map"/>
     </node>
 
-    <!-- Initiate global localization, wherein all particles are dispersed randomly through the free space in the map -->
-    <node pkg="rosservice" type="rosservice" name="global_localization" args="call --wait /global_localization"/>
 
     <!--We need a map to fully cover-->
     <node name="grid_server" pkg="map_server" type="map_server" args="$(arg map_path)/$(arg map_name).yaml">
         <param name="frame_id" value="map"/>
     </node>
+
+    <!-- TODO -->
+    <!-- Initiate global localization, wherein all particles are dispersed randomly through the free space in the map -->
+    <!-- <node pkg="rosservice" type="rosservice" name="global_localization" args="call --><!--wait /global_localization"/> -->
 
     <!-- Trigger planner by publishing a move_base goal -->
     <!--
