@@ -6,13 +6,15 @@
 
 
 
-    <node pkg="move_base" type="move_base" name="move_base" output="screen">
+    <node if="false" pkg="move_base" type="move_base" name="move_base" output="screen">
 
         <rosparam file="$(find rm_cleaner_js)/config/move_base_params.yaml" command="load" /> 
         <rosparam file="$(find rm_cleaner_js)/config/global_planner_clean_params.yaml" command="load" />
         <!-- <rosparam file="$(find rm_cleaner_js)/config/local_planner_params.yaml" command="load" /> -->
+        
         <!-- <param name="base_local_planner" value="teb_local_planner/TebLocalPlannerROS" /> -->
         <param name="base_local_planner" value="dwa_local_planner/DWAPlannerROS" />
+        <!-- <param name="base_local_planner" value="base_local_planner/TrajectoryPlannerROS" /> -->
         
         <param name="SpiralSTC/robot_radius" value="$(arg robot_radius)"/>
         <param name="SpiralSTC/tool_radius" value="$(arg tool_radius)"/>
@@ -33,11 +35,35 @@
         <remap from="map" to="/map" />
 
     </node>
+    <node pkg="move_base" type="move_base" name="move_base" output="screen" >
+
+        <param name="SBPLLatticePlanner/primitive_filename" value="$(find mir_navigation)/mprim/unicycle_highcost_5cm.mprim" />
+
+        <rosparam file="$(find rm_cleaner_js)/config/move_base_params.yaml" command="load" />
+        <rosparam file="$(find rm_cleaner_js)/config/global_planner_explore_params.yaml" command="load" />
+        <rosparam file="$(find rm_cleaner_js)/config/local_planner_params.yaml" command="load" />
+
+        <!-- Global costmap -->
+        <rosparam file="$(find rm_cleaner_js)/config/costmap_common_params.yaml" command="load" ns="global_costmap"/>
+        <rosparam file="$(find rm_cleaner_js)/config/costmap_global_params.yaml" command="load" />
+
+        <!-- Local costmap -->
+        <rosparam file="$(find rm_cleaner_js)/config/costmap_common_params.yaml" command="load" ns="local_costmap"/>
+        <rosparam file="$(find rm_cleaner_js)/config/costmap_local_params.yaml" command="load" />
+
+        <!-- <remap from="map" to="/map" /> -->
+        <!-- <remap from="marker" to="move_base_node/DWBLocalPlanner/markers" /> -->
+
+        <param name="global_costmap/track_unknown_space" value="true" />
+        <param name="local_costmap/track_unknown_space" value="true" />
+
+    </node>
 
 
     <!-- AMCL -->
     <node pkg="amcl" type="amcl" name="amcl" output="screen" >
-      <param name="use_map_topic"             value="false"/>
+      <param name="use_map_topic"             value="true"/>
+      <param name="first_map_only"            value="true"/>
       <param name="odom_model_type"           value="diff-corrected"/>
       <param name="gui_publish_rate"          value="10.0"/>
       <param name="save_pose_rate"            value="0.5"/>
@@ -60,8 +86,8 @@
       <param name="laser_lambda_short"        value="0.1"/>
       <param name="laser_model_type"          value="likelihood_field"/>
       <param name="laser_likelihood_max_dist" value="2.0"/>
-      <param name="update_min_d"              value="0.2"/>
-      <param name="update_min_a"              value="0.2"/>
+      <param name="update_min_d"              value="0.002"/>
+      <param name="update_min_a"              value="0.002"/>
       <param name="odom_frame_id"             value="odom"/>
       <param name="base_frame_id"             value="base_footprint"/>
       <param name="global_frame_id"           value="map"/>
@@ -77,11 +103,20 @@
       <remap from="static_map"                to="/static_map"/>
     </node>
 
-
     <!--We need a map to fully cover-->
     <node name="grid_server" pkg="map_server" type="map_server" args="$(arg map_path)/$(arg map_name).yaml">
         <param name="frame_id" value="map"/>
     </node>
+
+
+
+    <!-- TEST -->
+
+
+    <!-- END TEST -->
+
+
+
 
     <!-- TODO -->
     <!-- Initiate global localization, wherein all particles are dispersed randomly through the free space in the map -->
