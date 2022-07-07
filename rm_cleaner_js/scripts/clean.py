@@ -42,7 +42,7 @@ if __name__ == '__main__':
     map_topic = "/map"
 
     try:
-        rospy.init_node('movebase_client_py')
+        rospy.init_node('cleaner')
         
         rospy.loginfo(f"Waiting for map on topic {map_topic}")
         occ_map = rospy.wait_for_message(map_topic, OccupancyGrid)
@@ -56,6 +56,10 @@ if __name__ == '__main__':
         map_np = map_np.reshape((map_w, map_h), order="F")
 
         free_cells = np.where(map_np == 0)
+        free_area = free_cells[0].shape[0] * (map_resolution ** 2) # m^2
+
+
+        exit()
         
         
         
