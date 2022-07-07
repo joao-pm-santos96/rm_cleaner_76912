@@ -10,7 +10,6 @@ import rospy
 import numpy as np
 
 from nav_msgs.msg import OccupancyGrid
-# from map_msgs.msg import OccupancyGridUpdate
 
 """
 METADATA
@@ -52,6 +51,7 @@ class CleanerBot:
         self.cleaned_area = cleaned_cells * (resolution ** 2)
 
         self.clean_ratio = self.cleaned_area / self.total_area if self.total_area != 0 else 0
+        rospy.loginfo(f"Cleaned {self.cleaned_area:.2f} of {self.total_area:.2f} ({self.clean_ratio*100:.2f}%)")
 
     def config(self):
         # TODO get params        
@@ -69,9 +69,6 @@ class CleanerBot:
         rospy.loginfo(f"Map received")
 
         resolution = occ_map.info.resolution
-        # map_w  = occ_map.info.width
-        # map_h  = occ_map.info.height
-        # map_origin = occ_map.info.origin
 
         map_np = np.array(occ_map.data)
         free_cells = np.count_nonzero(map_np == COSTMAP_FREE)
