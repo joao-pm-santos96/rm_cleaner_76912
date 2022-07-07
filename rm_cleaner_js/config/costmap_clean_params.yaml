@@ -6,8 +6,9 @@ width: 30.0
 origin_x: -15.0
 origin_y: -15.0
 track_unknown_space: true
+always_send_full_costmap: true
 update_frequency: 10.0
-publish_frequency: 1.0
+publish_frequency: 2.0
 footprint: [[0.55,-0.32],[0.55,0.32],[0.45,0.32],[0.45,-0.32]]
 footprint_padding: 0.0
 
