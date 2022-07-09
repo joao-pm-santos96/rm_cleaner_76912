@@ -8,7 +8,7 @@
         <param name="SBPLLatticePlanner/primitive_filename" value="$(find mir_navigation)/mprim/unicycle_highcost_5cm.mprim" />
 
         <rosparam file="$(find rm_cleaner_js)/config/move_base_params.yaml" command="load" />
-        <rosparam file="$(find rm_cleaner_js)/config/global_planner_explore_params.yaml" command="load" />
+        <rosparam file="$(find rm_cleaner_js)/config/global_planner_params.yaml" command="load" />
         <rosparam file="$(find rm_cleaner_js)/config/local_planner_params.yaml" command="load" />
 
         <!-- Global costmap -->
@@ -35,6 +35,11 @@
         <param name="base_frame" value="/base_link" />
         <param name="map_update_interval" value="2.0" />
         <param name="linearUpdate" value="0.5" />
+        <param name="xmin" value="-15" />
+        <param name="ymin" value="-15" />
+        <param name="xmax" value="15" />
+        <param name="ymax" value="15" />
+        <param name="delta" value="0.05" />
     </node>
 
     <!-- Explore lite -->

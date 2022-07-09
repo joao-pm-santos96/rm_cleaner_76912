@@ -82,7 +82,7 @@ DWBLocalPlanner:
 
   # Debugging
   publish_cost_grid_pc: true
-  debug_trajectory_details: false
+  debug_trajectory_details: true
   publish_evaluation: true
   publish_global_plan: true
   publish_input_params: true
