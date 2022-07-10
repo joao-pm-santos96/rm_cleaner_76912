@@ -1,6 +1,7 @@
 <launch>
     <arg name="map_path" default="$(find rm_cleaner_js)/maps"/>
     <arg name="map_name" default="map" />
+    <arg name="clean_goal" />
 
     <!-- AMCL -->
     <node pkg="amcl" type="amcl" name="amcl" output="screen" >
@@ -53,6 +54,17 @@
     <!-- Cleaning map -->
     <node name="cleaned_area" pkg="costmap_2d" type="costmap_2d_node" >
         <rosparam file="$(find rm_cleaner_js)/config/costmap_clean_params.yaml" command="load" ns="costmap" />
+    </node>
+
+    <!-- Cleaning node -->
+    <node name="clean_bot" pkg="rm_cleaner_js" type="cleaner_bot.py" output="screen">
+        <param name="map_topic" value="/map"/>
+        <param name="cleaned_area_topic" value="/cleaned_area/costmap/costmap" />
+        <param name="move_base_ns" value="move_base" />
+        <param name="clean_goal" value="$(arg clean_goal)" />
+        <param name="delta_w" value="1.0" />
+        <param name="delta_h" value="0.7" />
+        <param name="frequency" value="15" />
     </node>
 
 
