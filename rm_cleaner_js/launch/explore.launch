@@ -1,32 +1,5 @@
 <launch>
 
-    <arg name="track_unknown_space" default="true"/>
-
-    <!-- Move base -->
-    <node pkg="move_base" type="move_base" name="move_base" output="screen" >
-
-        <param name="SBPLLatticePlanner/primitive_filename" value="$(find mir_navigation)/mprim/unicycle_highcost_5cm.mprim" />
-
-        <rosparam file="$(find rm_cleaner_js)/config/move_base_params.yaml" command="load" />
-        <rosparam file="$(find rm_cleaner_js)/config/global_planner_params.yaml" command="load" />
-        <rosparam file="$(find rm_cleaner_js)/config/local_planner_params.yaml" command="load" />
-
-        <!-- Global costmap -->
-        <rosparam file="$(find rm_cleaner_js)/config/costmap_common_params.yaml" command="load" ns="global_costmap"/>
-        <rosparam file="$(find rm_cleaner_js)/config/costmap_global_params.yaml" command="load" />
-
-        <!-- Local costmap -->
-        <rosparam file="$(find rm_cleaner_js)/config/costmap_common_params.yaml" command="load" ns="local_costmap"/>
-        <rosparam file="$(find rm_cleaner_js)/config/costmap_local_params.yaml" command="load" />
-
-        <!-- <remap from="map" to="/map" /> -->
-        <!-- <remap from="marker" to="move_base_node/DWBLocalPlanner/markers" /> -->
-
-        <param name="global_costmap/track_unknown_space" value="$(arg track_unknown_space)" />
-        <param name="local_costmap/track_unknown_space" value="$(arg track_unknown_space)" />
-
-    </node>
-
     <!-- GMapping -->
     <node pkg="gmapping" type="slam_gmapping" name="gmapping" output="screen">
         <remap from="scan" to="scan_multi" />

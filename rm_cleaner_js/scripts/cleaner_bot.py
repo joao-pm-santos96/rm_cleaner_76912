@@ -132,24 +132,6 @@ class CleanerBot:
             self.rate.sleep()
 
 
-        # while True:
-        #     goal.target_pose.header.stamp = rospy.Time.now()
-
-        #     goal.target_pose.pose.position.x = random.uniform(-10, 10)
-        #     goal.target_pose.pose.position.y = random.uniform(-10, 10)
-        #     quat_tf = quaternion_from_euler(0, 0, random.uniform(0,2*3.14))
-        #     quat_msg = Quaternion(quat_tf[0], quat_tf[1], quat_tf[2], quat_tf[3])
-        #     goal.target_pose.pose.orientation = quat_msg
-
-        #     self.move_client.send_goal(goal)
-        #     wait = self.move_client.wait_for_result()
-
-        #     if not wait:
-        #         pass
-
-        #     self.rate.sleep()
-
-
 """
 FUNCTIONS DEFINITIONS
 """
