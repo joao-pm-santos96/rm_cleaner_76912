@@ -66,18 +66,7 @@
         <param name="frequency" value="15" />
     </node>
 
-
-
-
-
-
-
-    <!-- TODO -->
     <!-- Initiate global localization, wherein all particles are dispersed randomly through the free space in the map -->
     <!-- <node pkg="rosservice" type="rosservice" name="global_localization" args="call --><!--wait /global_localization"/> -->
 
-    <!-- Trigger planner by publishing a move_base goal -->
-    <!--
-    <node if="false" name="publish_simple_goal" pkg="rostopic" type="rostopic"  launch-prefix="bash -c 'sleep 1.0; $0 $@' " args="pub --><!--latch /move_base/goal move_base_msgs/MoveBaseActionGoal --><!--file=$(find full_coverage_path_planner)/test/simple_goal.yaml"/>
-   -->
 </launch>
