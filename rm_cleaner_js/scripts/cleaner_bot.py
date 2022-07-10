@@ -66,15 +66,6 @@ class CleanerBot:
         rospy.loginfo(f"Cleaned {self.cleaned_area:.2f} of {self.total_area:.2f} ({self.clean_ratio*100:.2f}%)")
 
     def config(self):
-        # # TODO get params        
-        # self.map_topic = "/map"
-        # self.cleaned_area_topic = "/cleaned_area/costmap/costmap"
-        # self.move_base_ns = "move_base"
-        # self.clean_goal = 1.0
-        # self.rate = rospy.Rate(15) #hz
-        # self.footprint_w = 0.9 * 4
-        # self.footprint_h = 0.6
-
 
         # Get params
         self.map_topic = rospy.get_param("~map_topic", "/map")
@@ -126,17 +117,17 @@ class CleanerBot:
         ang = None
 
         map_2d = self.map.reshape(self.map_h, self.map_w)
-        a = np.where(map_2d == COSTMAP_FREE)
+        free_space = np.where(map_2d == COSTMAP_FREE)
 
-        h_min = np.min(a[0]) * self.resolution + self.map_origin.position.x
-        h_max = np.max(a[0]) * self.resolution + self.map_origin.position.x
-        h_min = h_min + self.delta_h / 2
-        h_max = h_max - self.delta_h / 2
+        h_min = np.min(free_space[0]) * self.resolution + self.map_origin.position.x
+        h_max = np.max(free_space[0]) * self.resolution + self.map_origin.position.x
+        h_min = h_min + self.delta_h
+        h_max = h_max - self.delta_h
 
-        w_min = np.min(a[1]) * self.resolution + self.map_origin.position.y
-        w_max = np.max(a[1]) * self.resolution + self.map_origin.position.y
-        w_min = w_min + self.delta_w / 2
-        w_max = w_max - self.delta_w / 2
+        w_min = np.min(free_space[1]) * self.resolution + self.map_origin.position.y
+        w_max = np.max(free_space[1]) * self.resolution + self.map_origin.position.y
+        w_min = w_min + self.delta_w
+        w_max = w_max - self.delta_w
 
         for h in np.arange(h_min, h_max, self.delta_h):
             ang = np.pi if ang == 0 else 0

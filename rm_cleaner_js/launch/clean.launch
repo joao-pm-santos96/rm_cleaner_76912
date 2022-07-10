@@ -1,6 +1,5 @@
 <launch>
-    <arg name="map_path" default="$(find rm_cleaner_js)/maps"/>
-    <arg name="map_name" default="map" />
+    <arg name="map_file" />
     <arg name="clean_goal" />
 
     <!-- AMCL -->
@@ -47,7 +46,7 @@
     </node>
 
     <!--We need a map to fully cover-->
-    <node name="grid_server" pkg="map_server" type="map_server" args="$(arg map_path)/$(arg map_name).yaml">
+    <node name="grid_server" pkg="map_server" type="map_server" args="$(arg map_file)">
         <param name="frame_id" value="map"/>
     </node>
 
