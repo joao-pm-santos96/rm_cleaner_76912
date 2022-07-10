@@ -53,7 +53,7 @@ class CleanerBot:
 
     def cleaned_map_callback(self, map):
         resolution = map.info.resolution
-        self.map_cleaned = np.array(map.data)
+        self.map_cleaned = np.asarray(map.data, dtype=np.int8)
         cleaned_cells = np.sum(self.map_cleaned == COSTMAP_FREE)
 
         self.cleaned_area = cleaned_cells * (resolution ** 2)
@@ -86,7 +86,8 @@ class CleanerBot:
         self.map_h  = occ_map.info.height
         self.map_origin = occ_map.info.origin
 
-        self.map = np.array(occ_map.data)
+        # self.map = np.array(occ_map.data)
+        self.map = np.asarray(occ_map.data, dtype=np.int8)#.reshape(occ_map.info.height, occ_map.info.width)
         free_cells = np.count_nonzero(self.map == COSTMAP_FREE)
         self.total_area = free_cells * (self.resolution ** 2)
 
