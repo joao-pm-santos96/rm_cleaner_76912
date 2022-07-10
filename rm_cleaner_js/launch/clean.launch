@@ -3,9 +3,11 @@
     <arg name="map_name" default="map" />
     <arg name="track_unknown_space" default="true"/>
 
+    <arg name="prefix" default="" doc="Prefix used for robot tf frames" />
+
 
     <!-- Move base -->
-    <node pkg="move_base" type="move_base" name="move_base" output="screen" >
+    <node if="false" pkg="move_base" type="move_base" name="move_base" output="screen" >
 
         <param name="SBPLLatticePlanner/primitive_filename" value="$(find mir_navigation)/mprim/unicycle_highcost_5cm.mprim" />
 
@@ -27,6 +29,24 @@
         <param name="global_costmap/track_unknown_space" value="$(arg track_unknown_space)" />
         <param name="local_costmap/track_unknown_space" value="$(arg track_unknown_space)" />
 
+    </node>
+    <node pkg="move_base" type="move_base" respawn="false" name="move_base_node" output="screen" clear_params="true">
+        <param name="SBPLLatticePlanner/primitive_filename" value="$(find mir_navigation)/mprim/unicycle_highcost_5cm.mprim" />
+        <rosparam file="$(find mir_navigation)/config/move_base_common_params.yaml" command="load" />
+        <rosparam file="$(find mir_navigation)/config/sbpl_global_params.yaml" command="load" />
+        <rosparam file="$(find mir_navigation)/config/dwb_local_planner_params.yaml" command="load" />
+        <!-- global costmap params -->
+        <rosparam file="$(find mir_navigation)/config/costmap_common_params.yaml" command="load" ns="global_costmap" subst_value="true" />
+        <rosparam file="$(find mir_navigation)/config/costmap_global_params.yaml" command="load" />
+        <rosparam file="$(find mir_navigation)/config/costmap_global_params_plugins_virtual_walls.yaml" command="load" if="false" />
+        <rosparam file="$(find mir_navigation)/config/costmap_global_params_plugins_no_virtual_walls.yaml" command="load" unless="false" />
+        <!-- local costmap params -->
+        <rosparam file="$(find mir_navigation)/config/costmap_common_params.yaml" command="load" ns="local_costmap" subst_value="true" />
+        <rosparam file="$(find mir_navigation)/config/costmap_local_params.yaml" command="load" subst_value="true" />
+        <rosparam file="$(find mir_navigation)/config/costmap_local_params_plugins_virtual_walls.yaml" command="load" if="false" />
+        <rosparam file="$(find mir_navigation)/config/costmap_local_params_plugins_no_virtual_walls.yaml" command="load" unless="false" />
+        <remap from="map" to="/map" />
+        <remap from="marker" to="move_base_node/DWBLocalPlanner/markers" />
     </node>
 
 

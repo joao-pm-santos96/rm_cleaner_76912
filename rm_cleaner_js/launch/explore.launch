@@ -35,10 +35,10 @@
         <param name="base_frame" value="/base_link" />
         <param name="map_update_interval" value="2.0" />
         <param name="linearUpdate" value="0.5" />
-        <param name="xmin" value="-15" />
-        <param name="ymin" value="-15" />
-        <param name="xmax" value="15" />
-        <param name="ymax" value="15" />
+        <param name="xmin" value="-15.0" />
+        <param name="ymin" value="-15.0" />
+        <param name="xmax" value="15.0" />
+        <param name="ymax" value="15.0" />
         <param name="delta" value="0.05" />
     </node>
 
@@ -48,13 +48,13 @@
         <param name="costmap_topic" value="map"/>
         <param name="costmap_updates_topic" value="map_updates"/>
         <param name="visualize" value="true"/>
-        <param name="planner_frequency" value="0.33"/>
+        <param name="planner_frequency" value="1.0"/>
         <param name="progress_timeout" value="30.0"/>
-        <param name="potential_scale" value="3.0"/>
-        <param name="orientation_scale" value="0.0"/>
+        <param name="potential_scale" value="2.0"/>
+        <param name="orientation_scale" value="1.0"/>
         <param name="gain_scale" value="1.0"/>
         <param name="transform_tolerance" value="0.3"/>
-        <param name="min_frontier_size" value="0.25"/>
+        <param name="min_frontier_size" value="0.2"/>
     </node>
 
 </launch>

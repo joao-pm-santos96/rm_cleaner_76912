@@ -53,7 +53,8 @@ class CleanerBot:
 
     def cleaned_map_callback(self, map):
         resolution = map.info.resolution
-        cleaned_cells = np.sum(np.array(map.data) == COSTMAP_FREE)
+        self.map_cleaned = np.array(map.data)
+        cleaned_cells = np.sum(self.map_cleaned == COSTMAP_FREE)
 
         self.cleaned_area = cleaned_cells * (resolution ** 2)
 
@@ -80,11 +81,14 @@ class CleanerBot:
         occ_map = rospy.wait_for_message(self.map_topic, OccupancyGrid)
         rospy.loginfo(f"Map received")
 
-        resolution = occ_map.info.resolution
+        self.resolution = occ_map.info.resolution
+        self.map_w  = occ_map.info.width
+        self.map_h  = occ_map.info.height
+        self.map_origin = occ_map.info.origin
 
-        map_np = np.array(occ_map.data)
-        free_cells = np.count_nonzero(map_np == COSTMAP_FREE)
-        self.total_area = free_cells * (resolution ** 2)
+        self.map = np.array(occ_map.data)
+        free_cells = np.count_nonzero(self.map == COSTMAP_FREE)
+        self.total_area = free_cells * (self.resolution ** 2)
 
         rospy.loginfo(f"Total area: {self.total_area} m2")
 
@@ -96,10 +100,22 @@ class CleanerBot:
         goal.target_pose.header.frame_id = self.map_topic if self.map_topic[0] != "/" else self.map_topic[1:]
 
         while True:
-            goal.target_pose.header.stamp = rospy.Time.now()
 
-            goal.target_pose.pose.position.x = random.uniform(-10, 10)
-            goal.target_pose.pose.position.y = random.uniform(-10, 10)
+            min_len = np.min([self.map.shape[0], self.map_cleaned.shape[0]])
+
+            free_cells = np.where((self.map[0:min_len] == COSTMAP_FREE) & (self.map_cleaned[0:min_len] == COSTMAP_FREE))
+            free_idxs = np.unravel_index(free_cells, (self.map_w,self.map_h))
+            
+            idx = random.randrange(0, free_idxs[0].shape[1])
+            
+            x = free_idxs[0][0][idx]
+            x = x * self.resolution + self.map_origin.position.x
+
+            y = free_idxs[1][0][idx]
+            y = y * self.resolution + self.map_origin.position.y
+
+            goal.target_pose.pose.position.x = x
+            goal.target_pose.pose.position.y = y
             quat_tf = quaternion_from_euler(0, 0, random.uniform(0,2*3.14))
             quat_msg = Quaternion(quat_tf[0], quat_tf[1], quat_tf[2], quat_tf[3])
             goal.target_pose.pose.orientation = quat_msg
@@ -110,7 +126,28 @@ class CleanerBot:
             if not wait:
                 pass
 
+            if self.clean_ratio > 0.95:
+                rospy.signal_shutdown("Done")
+    
             self.rate.sleep()
+
+
+        # while True:
+        #     goal.target_pose.header.stamp = rospy.Time.now()
+
+        #     goal.target_pose.pose.position.x = random.uniform(-10, 10)
+        #     goal.target_pose.pose.position.y = random.uniform(-10, 10)
+        #     quat_tf = quaternion_from_euler(0, 0, random.uniform(0,2*3.14))
+        #     quat_msg = Quaternion(quat_tf[0], quat_tf[1], quat_tf[2], quat_tf[3])
+        #     goal.target_pose.pose.orientation = quat_msg
+
+        #     self.move_client.send_goal(goal)
+        #     wait = self.move_client.wait_for_result()
+
+        #     if not wait:
+        #         pass
+
+        #     self.rate.sleep()
 
 
 """
