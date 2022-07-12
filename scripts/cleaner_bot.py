@@ -108,6 +108,8 @@ class CleanerBot:
     def clean(self):
 
         rospy.loginfo("Start cleaning")
+
+        self.start_time = rospy.Time.now()
         
         self.move_client.wait_for_server()
 
@@ -154,8 +156,9 @@ class CleanerBot:
                 self.rate.sleep()
 
     def on_shutdown(self):
+        delta_t = rospy.Time.now() - self.start_time
         rospy.loginfo("Clean cycle ended")
-        rospy.loginfo(f"Cleaned {self.clean_ratio*100:.2f}%")
+        rospy.loginfo(f"Cleaned {self.clean_ratio*100:.2f}% in {delta_t.to_sec()}sec")
 
 
 """
@@ -174,7 +177,7 @@ if __name__ == '__main__':
         bot.get_infos()
         bot.clean()
 
-        # rospy.spin()
+        rospy.spin()
 
     except Exception as e:
         rospy.logfatal(e)
