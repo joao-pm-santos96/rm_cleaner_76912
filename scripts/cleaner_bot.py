@@ -20,6 +20,8 @@ from geometry_msgs.msg import Quaternion
 
 from tf.transformations import quaternion_from_euler
 
+from interactive_markers.interactive_marker_server import *
+from visualization_msgs.msg import *
 """
 METADATA
 """
@@ -52,6 +54,7 @@ class CleanerBot:
         self.total_area = 0
         self.cleaned_area = 0
         self.clean_ratio = 0
+        self.cleaning = False
 
         rospy.on_shutdown(self.on_shutdown)
 
@@ -160,6 +163,42 @@ class CleanerBot:
         rospy.loginfo("Clean cycle ended")
         rospy.loginfo(f"Cleaned {self.clean_ratio*100:.2f}% in {delta_t.to_sec()}sec")
 
+    def pub_button(self):
+        self.server = InteractiveMarkerServer("int_marker")
+
+        int_marker = InteractiveMarker()
+        int_marker.header.frame_id = "map"
+        int_marker.name = "int_marker"
+        int_marker.description = "int_marker"
+        int_marker.pose.position.z = 2.0
+
+        marker = Marker()
+        marker.type = Marker.SPHERE
+        marker.scale.x = 0.5
+        marker.scale.y = 0.5
+        marker.scale.z = 0.5
+        marker.color.r = 0.0
+        marker.color.g = 0.0
+        marker.color.b = 1.0
+        marker.color.a = 1.0
+
+        control = InteractiveMarkerControl()
+        control.always_visible = True
+        control.markers.append(marker)
+        control.interaction_mode = InteractiveMarkerControl.BUTTON
+
+        int_marker.controls.append(control)
+        self.server.insert(int_marker, self.button_callback)
+
+        self.server.applyChanges()
+
+    def button_callback(self, feedback):
+        
+        if not self.cleaning:
+            self.cleaning = True
+            self.clean()
+    
+
 
 """
 FUNCTIONS DEFINITIONS
@@ -175,7 +214,8 @@ if __name__ == '__main__':
         bot = CleanerBot()
         bot.config()
         bot.get_infos()
-        bot.clean()
+        # bot.clean()
+        bot.pub_button()
 
         rospy.spin()
 
