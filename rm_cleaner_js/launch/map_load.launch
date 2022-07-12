@@ -1,3 +1,0 @@
-<launch>
-  <node name="map_load" pkg="map_server" type="map_server" args="$(find rm_cleaner_js)/maps/map.yaml" />
-</launch>

@@ -46,17 +46,17 @@
     </node>
 
     <!--We need a map to fully cover-->
-    <node name="grid_server" pkg="map_server" type="map_server" args="$(arg map_file)">
+    <node name="grid_server" pkg="map_server" type="map_server" args="$(arg map_file)" output="screen">
         <param name="frame_id" value="map"/>
     </node>
 
     <!-- Cleaning map -->
-    <node name="cleaned_area" pkg="costmap_2d" type="costmap_2d_node" >
-        <rosparam file="$(find rm_cleaner_js)/config/costmap_clean_params.yaml" command="load" ns="costmap" />
+    <node name="cleaned_area" pkg="costmap_2d" type="costmap_2d_node" output="screen">
+        <rosparam file="$(find rm_cleaner_76912)/config/costmap_clean_params.yaml" command="load" ns="costmap" />
     </node>
 
     <!-- Cleaning node -->
-    <node name="clean_bot" pkg="rm_cleaner_js" type="cleaner_bot.py" output="screen">
+    <node name="clean_bot" pkg="rm_cleaner_76912" type="cleaner_bot.py" output="screen">
         <param name="map_topic" value="/map"/>
         <param name="cleaned_area_topic" value="/cleaned_area/costmap/costmap" />
         <param name="move_base_ns" value="move_base" />

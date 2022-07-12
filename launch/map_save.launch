@@ -1,0 +1,5 @@
+<launch>
+  <arg name="map_name" />
+
+  <node name="map_saver" pkg="map_server" type="map_saver" args="-f $(find rm_cleaner_76912)/maps/$(arg map_name)" />
+</launch>

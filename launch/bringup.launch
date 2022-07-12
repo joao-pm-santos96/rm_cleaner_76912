@@ -75,7 +75,7 @@
 
     <!-- Visualize -->
     <group if="$(arg rviz)">
-        <node name="rviz" pkg="rviz" type="rviz" args="--display-config $(find rm_cleaner_js)/config/visualize.rviz" required="false"/>
+        <node name="rviz" pkg="rviz" type="rviz" args="--display-config $(find rm_cleaner_76912)/config/visualize.rviz" required="false"/>
     </group>
 
 </launch>
