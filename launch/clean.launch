@@ -57,7 +57,10 @@
 
     <!-- Cleaning node -->
     <node name="clean_bot" pkg="rm_cleaner_76912" type="cleaner_bot.py" output="screen">
+        <!-- <param name="map_topic" value="/map"/> -->
+        <param name="frame_id" value="map"/>
         <param name="map_topic" value="/map"/>
+        <param name="costmap_topic" value="/move_base/global_costmap/costmap"/>
         <param name="cleaned_area_topic" value="/cleaned_area/costmap/costmap" />
         <param name="move_base_ns" value="move_base" />
         <param name="clean_goal" value="$(arg clean_goal)" />
@@ -66,6 +69,9 @@
         <param name="frequency" value="15" />
     </node>
 
+    <!-- <param name="/move_base/global_costmap/footprint" value="[[0.488,-0.335],[0.488,0.335],[-0.412,0.335],[-0.412,-0.335]]" />
+    <param name="/move_base/local_costmap/footprint" value="[[0.488,-0.335],[0.488,0.335],[-0.412,0.335],[-0.412,-0.335]]" /> -->
+    
     <!-- Initiate global localization, wherein all particles are dispersed randomly through the free space in the map -->
     <!-- <node pkg="rosservice" type="rosservice" name="global_localization" args="call --><!--wait /global_localization"/> -->
 
